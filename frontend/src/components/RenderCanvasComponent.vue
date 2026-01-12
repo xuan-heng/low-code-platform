@@ -72,6 +72,9 @@ function getComponentStyle(): Record<string, string> {
   // 背景
   if (s.backgroundColor) style.backgroundColor = s.backgroundColor
 
+  // 图片
+  if (s.objectFit) style.objectFit = s.objectFit
+
   // 文字
   if (s.fontSize !== undefined) style.fontSize = `${s.fontSize}px`
   if (s.fontWeight) style.fontWeight = s.fontWeight
@@ -114,7 +117,7 @@ function getComponentAttrs(): Record<string, any> {
   return attrs
 }
 
-  // 获取组件内容
+// 获取组件内容
 function getComponentContent(): string | null {
   const p = props.component.props
   switch (props.component.type) {
@@ -129,6 +132,7 @@ function getComponentContent(): string | null {
 const hasChildren = computed(() => {
   return props.component.children && props.component.children.length > 0
 })
+
 // 选中状态样式
 const wrapperStyle = computed(() => {
   if (props.isSelected && !props.isPreview) {
@@ -190,129 +194,6 @@ function handleDrop(e: DragEvent) {
       }
     }
   }
-}
-
-// 渲染子组件
-function renderChildren() {
-  if (!props.component.children) return []
-  return props.component.children.map(child => h(
-    RenderCanvasComponent,
-    {
-      key: child.id,
-      component: child,
-      isSelected: false,
-      isPreview: props.isPreview,
-      onSelect: (id: string) => emit('select', id),
-      onDelete: (id: string) => emit('delete', id),
-    }
-  ))
-}
-
-// 渲染容器内容
-function renderContainer() {
-  const type = props.component.type
-  const s = props.component.styles
-  const p = props.component.props
-
-  if (type === 'container') {
-    return h('div', {
-      style: {
-        width: s.width || '100%',
-        minHeight: s.minHeight ? `${s.minHeight}px` : '100px',
-        backgroundColor: s.backgroundColor || '#ffffff',
-        borderWidth: s.borderWidth !== undefined ? `${s.borderWidth}px` : undefined,
-        borderColor: s.borderColor || undefined,
-        borderRadius: s.borderRadius !== undefined ? `${s.borderRadius}px` : undefined,
-        paddingTop: s.paddingTop !== undefined ? `${s.paddingTop}px` : undefined,
-        paddingRight: s.paddingRight !== undefined ? `${s.paddingRight}px` : undefined,
-        paddingBottom: s.paddingBottom !== undefined ? `${s.paddingBottom}px` : undefined,
-        paddingLeft: s.paddingLeft !== undefined ? `${s.paddingLeft}px` : undefined,
-      },
-      class: 'relative',
-      onClick: handleClick,
-    }, [
-      ...renderChildren(),
-      renderDeleteButton(),
-    ])
-  }
-
-  if (type === 'row') {
-    return h('div', {
-      style: {
-        display: s.display || 'flex',
-        flexDirection: s.flexDirection || 'row',
-        justifyContent: s.justifyContent || 'flex-start',
-        alignItems: s.alignItems || 'stretch',
-        flexWrap: s.flexWrap || 'nowrap',
-        gap: s.gap !== undefined ? `${s.gap}px` : undefined,
-        width: s.width || '100%',
-        paddingTop: s.paddingTop !== undefined ? `${s.paddingTop}px` : undefined,
-        paddingRight: s.paddingRight !== undefined ? `${s.paddingRight}px` : undefined,
-        paddingBottom: s.paddingBottom !== undefined ? `${s.paddingBottom}px` : undefined,
-        paddingLeft: s.paddingLeft !== undefined ? `${s.paddingLeft}px` : undefined,
-        marginBottom: s.marginBottom !== undefined ? `${s.marginBottom}px` : undefined,
-      },
-      class: 'relative',
-      onClick: handleClick,
-    }, [
-      ...renderChildren(),
-      renderDeleteButton(),
-    ])
-  }
-
-  if (type === 'card') {
-    return h('div', {
-      style: {
-        width: s.width || '100%',
-        backgroundColor: s.backgroundColor || '#ffffff',
-        borderWidth: s.borderWidth !== undefined ? `${s.borderWidth}px` : undefined,
-        borderColor: s.borderColor || '#e8e8e8',
-        borderRadius: s.borderRadius !== undefined ? `${s.borderRadius}px` : undefined,
-        paddingTop: s.paddingTop !== undefined ? `${s.paddingTop}px` : undefined,
-        paddingRight: s.paddingRight !== undefined ? `${s.paddingRight}px` : undefined,
-        paddingBottom: s.paddingBottom !== undefined ? `${s.paddingBottom}px` : undefined,
-        paddingLeft: s.paddingLeft !== undefined ? `${s.paddingLeft}px` : undefined,
-        boxShadow: s.boxShadow || 'none',
-      },
-      class: 'relative',
-      onClick: handleClick,
-    }, [
-      p.title ? h('div', {
-        style: {
-          fontSize: '16px',
-          fontWeight: '600',
-          color: '#333',
-          marginBottom: '12px',
-          paddingBottom: '12px',
-          borderBottom: '1px solid #f0f0f0',
-        }
-      }, p.title) : null,
-      ...renderChildren(),
-      renderDeleteButton(),
-    ])
-  }
-
-  // 普通组件
-  const tag = getComponentTag(type)
-  return h(tag, {
-    style: { ...getComponentStyle(), ...wrapperStyle.value },
-    class: 'relative group',
-    ...getComponentAttrs(),
-    onClick: handleClick,
-  }, [
-    getComponentContent(),
-    renderChildren(),
-    renderDeleteButton(),
-  ])
-}
-
-// 渲染删除按钮
-function renderDeleteButton() {
-  if (!props.isSelected || props.isPreview) return null
-  return h('button', {
-    class: 'absolute -top-3 -right-3 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600 z-10',
-    onClick: handleDelete,
-  }, '×')
 }
 </script>
 

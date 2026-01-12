@@ -211,21 +211,51 @@ export const useEditorStore = defineStore('editor', () => {
 
   // 上移组件
   function moveUp(id: string) {
+    // 先尝试在顶层列表中移动
     const index = components.value.findIndex(c => c.id === id)
     if (index > 0) {
       const temp = components.value[index - 1]
       components.value[index - 1] = components.value[index]
       components.value[index] = temp
+      return
+    }
+    
+    // 递归在子组件中查找并移动
+    for (const item of components.value) {
+      if (item.children && item.children.length > 0) {
+        const childIndex = item.children.findIndex(c => c.id === id)
+        if (childIndex > 0) {
+          const temp = item.children[childIndex - 1]
+          item.children[childIndex - 1] = item.children[childIndex]
+          item.children[childIndex] = temp
+          return
+        }
+      }
     }
   }
 
   // 下移组件
   function moveDown(id: string) {
+    // 先尝试在顶层列表中移动
     const index = components.value.findIndex(c => c.id === id)
-    if (index < components.value.length - 1) {
+    if (index !== -1 && index < components.value.length - 1) {
       const temp = components.value[index + 1]
       components.value[index + 1] = components.value[index]
       components.value[index] = temp
+      return
+    }
+    
+    // 递归在子组件中查找并移动
+    for (const item of components.value) {
+      if (item.children && item.children.length > 0) {
+        const childIndex = item.children.findIndex(c => c.id === id)
+        if (childIndex !== -1 && childIndex < item.children.length - 1) {
+          const temp = item.children[childIndex + 1]
+          item.children[childIndex + 1] = item.children[childIndex]
+          item.children[childIndex] = temp
+          return
+        }
+      }
     }
   }
 
