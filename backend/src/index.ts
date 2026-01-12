@@ -1,3 +1,27 @@
+/**
+ * Low Code Platform Backend
+ * 
+ * 功能：
+ * - REST API 服务，提供项目(projects)和模板(templates)的 CRUD 操作
+ * - 数据存储：SQLite 数据库 (data/projects.db)
+ * 
+ * 启动方式：
+ * - 开发模式: npm run dev
+ * - 生产模式: npm run build && npm start
+ * 
+ * API 端点：
+ * - GET    /api/projects      - 获取项目列表
+ * - GET    /api/projects/:id  - 获取单个项目
+ * - POST   /api/projects      - 创建项目
+ * - PUT    /api/projects/:id  - 更新项目
+ * - DELETE /api/projects/:id  - 删除项目
+ * - GET    /api/templates     - 获取模板列表
+ * - GET    /api/templates/:id - 获取单个模板
+ * - POST   /api/templates     - 创建模板
+ * 
+ * 注意：前端目前未对接此 API，如需使用需修改前端代码调用后端接口
+ */
+
 import express from 'express'
 import cors from 'cors'
 import db from './db'
