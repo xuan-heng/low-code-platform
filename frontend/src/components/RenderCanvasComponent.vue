@@ -47,6 +47,7 @@ function getComponentStyle(): Record<string, string> {
 
   // 尺寸
   if (s.width) style.width = typeof s.width === 'number' ? `${s.width}px` : s.width
+  if (s.maxWidth) style.maxWidth = typeof s.maxWidth === 'number' ? `${s.maxWidth}px` : s.maxWidth
   if (s.height) style.height = typeof s.height === 'number' ? `${s.height}px` : s.height
   if (s.minWidth) style.minWidth = s.minWidth
   if (s.minHeight) style.minHeight = s.minHeight
@@ -74,6 +75,9 @@ function getComponentStyle(): Record<string, string> {
 
   // 图片
   if (s.objectFit) style.objectFit = s.objectFit
+
+  // 文本域
+  if (s.resize) style.resize = s.resize
 
   // 文字
   if (s.fontSize !== undefined) style.fontSize = `${s.fontSize}px`

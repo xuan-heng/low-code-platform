@@ -180,7 +180,8 @@ export const componentDefinitions: ComponentDefinition[] = [
       { name: 'rows', label: '行数', type: 'number', min: 1, max: 20, default: 4 },
     ],
     styleSchema: [
-      { name: 'width', label: '宽度', category: 'size', type: 'number', unit: 'px', min: 0 },
+      { name: 'width', label: '宽度', category: 'size', type: 'number', unit: 'px', min: 0, max: 800 },
+      { name: 'maxWidth', label: '最大宽度', category: 'size', type: 'number', unit: 'px', min: 0, max: 1200 },
       { name: 'fontSize', label: '字号', category: 'typography', type: 'number', unit: 'px', min: 10, max: 72 },
       { name: 'color', label: '文字颜色', category: 'typography', type: 'color' },
       { name: 'borderWidth', label: '边框宽度', category: 'border', type: 'number', unit: 'px', min: 0 },
@@ -188,6 +189,12 @@ export const componentDefinitions: ComponentDefinition[] = [
       { name: 'borderRadius', label: '圆角', category: 'border', type: 'number', unit: 'px', min: 0 },
       { name: 'paddingTop', label: '上内边距', category: 'margin', type: 'number', unit: 'px', min: 0 },
       { name: 'paddingBottom', label: '下内边距', category: 'margin', type: 'number', unit: 'px', min: 0 },
+      { name: 'resize', label: '拖拽调整', category: 'layout', type: 'select', options: [
+        { label: '无', value: 'none' },
+        { label: '水平', value: 'horizontal' },
+        { label: '垂直', value: 'vertical' },
+        { label: '双向', value: 'both' },
+      ]},
       { name: 'textAlign', label: '对齐', category: 'typography', type: 'select', options: [
         { label: '左对齐', value: 'left' },
         { label: '居中', value: 'center' },
