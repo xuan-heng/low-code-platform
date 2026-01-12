@@ -213,26 +213,23 @@ function handleDrop(e: DragEvent) {
       @drop="handleDrop"
     >
       {{ getComponentContent() }}
-      <template v-if="hasChildren">
-        <RenderCanvasComponent
-          v-for="child in (component.children || [])"
-          :key="child.id"
-          :component="child"
-          :is-selected="false"
-          :is-preview="isPreview"
-          @select="(id) => emit('select', id)"
-          @delete="(id) => emit('delete', id)"
-          @add-child="(parentId, componentType) => emit('addChild', parentId, componentType)"
-        />
-      </template>
-      <!-- 空容器提示 -->
-      <div 
-        v-if="isContainerType && !hasChildren && !isPreview"
-        class="absolute inset-0 border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-400 pointer-events-none"
-      >
-        <span class="text-sm">拖拽组件到此</span>
-      </div>
+      <RenderCanvasComponent
+        v-for="child in (component.children || [])"
+        :key="child.id"
+        :component="child"
+        :is-selected="false"
+        :is-preview="isPreview"
+        @select="(id) => emit('select', id)"
+        @delete="(id) => emit('delete', id)"
+        @add-child="(parentId, componentType) => emit('addChild', parentId, componentType)"
+      />
     </component>
+    <div 
+      v-if="isContainerType && !hasChildren && !isPreview"
+      class="absolute inset-0 border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-400 pointer-events-none"
+    >
+      <span class="text-sm">拖拽组件到此</span>
+    </div>
     <button
       v-if="isSelected && !isPreview"
       class="absolute -top-3 -right-3 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600 z-10"
