@@ -1,6 +1,8 @@
 # 低代码平台 (Low Code Platform)
 
-一个基于 Vue 3 的拖拽式低代码页面构建平台。
+[English](./README.md) | 中文
+
+## 简介
 
 ## 项目结构
 

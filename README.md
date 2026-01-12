@@ -1,6 +1,8 @@
 # Low Code Platform
 
-A drag-and-drop low-code page builder platform built with Vue 3.
+[中文版本](./README.zh.md) | English
+
+## Overview
 
 ## Project Structure
 
