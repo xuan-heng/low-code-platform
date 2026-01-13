@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useEditorStore } from '@/stores/editor'
 import type { CanvasComponentProps } from '@/types/component'
 
 const props = defineProps<CanvasComponentProps>()
@@ -9,6 +10,20 @@ const emit = defineEmits<{
   (e: 'delete', id: string): void
   (e: 'addChild', parentId: string, componentType: string): void
 }>()
+
+const editorStore = useEditorStore()
+
+// 解析图片src，如果是本地图片ID则转换为实际URL
+function resolveImageSrc(src: string | undefined): string {
+  if (!src) return ''
+  // 如果是本地图片ID（不是http开头也不是data开头）
+  if (!src.startsWith('http') && !src.startsWith('data:')) {
+    const image = editorStore.getLocalImage(src)
+    if (image) return image.data
+    return ''
+  }
+  return src
+}
 
 // 判断是否为容器类型组件
 const isContainerType = computed(() => {
@@ -109,7 +124,7 @@ function getComponentAttrs(): Record<string, any> {
       attrs.placeholder = p.placeholder || ''
       break
     case 'image':
-      attrs.src = p.src || ''
+      attrs.src = resolveImageSrc(p.src)
       attrs.alt = p.alt || ''
       break
     case 'link':

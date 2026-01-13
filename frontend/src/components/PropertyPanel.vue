@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useEditorStore } from '@/stores/editor'
 import type { ComponentConfig, StyleSchema, PropSchema } from '@/types/component'
 
@@ -10,6 +10,56 @@ const definition = computed(() => {
   if (!selectedComponent.value) return null
   return editorStore.getDefinition(selectedComponent.value.type)
 })
+
+// 图片上传相关
+const isUploading = ref(false)
+
+async function handleImageUpload(event: Event) {
+  const input = event.target as HTMLInputElement
+  if (!input.files || input.files.length === 0) return
+
+  isUploading.value = true
+  try {
+    const file = input.files[0]
+    // 验证是否为图片
+    if (!file.type.startsWith('image/')) {
+      alert('请上传图片文件')
+      return
+    }
+
+    const image = await editorStore.addLocalImage(file)
+    updateProp('src', image.id)
+    updateProp('filename', image.filename)
+  } catch (error) {
+    console.error('图片上传失败:', error)
+    alert('图片上传失败')
+  } finally {
+    isUploading.value = false
+    input.value = ''
+  }
+}
+
+function openFilePicker(input: HTMLInputElement) {
+  input.click()
+}
+
+function handleUrlInput(event: Event) {
+  const input = event.target as HTMLInputElement
+  // 清除 filename 属性，表示使用外部 URL
+  updateProp('src', input.value)
+  updateProp('filename', undefined)
+}
+
+function getImageUrl(src: string | undefined): string {
+  if (!src) return ''
+  // 如果是本地图片ID
+  if (!src.startsWith('http') && !src.startsWith('data:')) {
+    const image = editorStore.getLocalImage(src)
+    if (image) return image.data
+    return ''
+  }
+  return src
+}
 
 // 分类显示样式属性
 const styleGroups = computed(() => {
@@ -151,13 +201,50 @@ function handleMoveDown() {
               
               <!-- 文本输入 -->
               <input
-                v-if="schema.type === 'text'"
+                v-if="schema.type === 'text' && schema.name !== 'src'"
                 type="text"
                 :value="selectedComponent.props[schema.name] ?? schema.default"
                 @input="updateProp(schema.name, ($event.target as HTMLInputElement).value)"
                 class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               />
-              
+
+                              <!-- 图片地址输入 -->
+                            <div v-else-if="schema.name === 'src'" class="space-y-2">
+                              <input
+                                type="text"
+                                :value="selectedComponent.props[schema.name] ?? schema.default"
+                                @input="handleUrlInput"
+                                placeholder="输入图片地址或上传本地图片"
+                                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                              />
+                              <div class="flex items-center gap-2">
+                                <input
+                                  :id="'file-upload-' + selectedComponent.id"
+                                  type="file"
+                                  accept="image/*"
+                                  class="hidden"
+                                  @change="handleImageUpload"
+                                />
+                                <label
+                                  :for="'file-upload-' + selectedComponent.id"
+                                  class="px-3 py-1.5 text-xs bg-blue-50 text-blue-600 border border-blue-200 rounded-md hover:bg-blue-100 transition-colors cursor-pointer"
+                                  :class="{'opacity-50': isUploading}"
+                                >
+                                  {{ isUploading ? '上传中...' : '上传本地图片' }}
+                                </label>
+                                <span v-if="selectedComponent.props.filename" class="text-xs text-gray-500 truncate max-w-[120px]">
+                                  {{ selectedComponent.props.filename }}
+                                </span>
+                              </div>
+                              <!-- 预览 -->
+                              <div v-if="getImageUrl(selectedComponent.props.src)" class="mt-2">
+                                <img
+                                  :src="getImageUrl(selectedComponent.props.src)"
+                                  alt="预览"
+                                  class="max-w-full h-24 object-contain border border-gray-200 rounded-md"
+                                />
+                              </div>
+                            </div>              
               <!-- 数字输入 -->
               <input
                 v-else-if="schema.type === 'number'"

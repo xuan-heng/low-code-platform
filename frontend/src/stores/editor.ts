@@ -3,18 +3,28 @@ import { ref, computed } from 'vue'
 import type { ComponentConfig, ComponentDefinition, ComponentType } from '@/types/component'
 import { componentDefinitions } from '@/data/component-definitions'
 
+export interface LocalImage {
+  id: string
+  filename: string
+  data: string // Base64 data
+  mimeType: string
+}
+
 export const useEditorStore = defineStore('editor', () => {
   // 画布上的组件列表
   const components = ref<ComponentConfig[]>([])
-  
+
   // 当前选中的组件ID
   const selectedId = ref<string | null>(null)
-  
+
   // 是否为预览模式
   const isPreview = ref(false)
-  
+
   // 是否为拖拽中
   const isDragging = ref(false)
+
+  // 本地图片存储
+  const localImages = ref<LocalImage[]>([])
 
   // 获取所有组件定义
   const definitions = computed(() => componentDefinitions)
@@ -259,17 +269,102 @@ export const useEditorStore = defineStore('editor', () => {
     }
   }
 
+  // 检查是否有使用本地图片的组件
+  const hasLocalImages = computed(() => {
+    function checkComponent(comp: ComponentConfig): boolean {
+      if (comp.type === 'image' && comp.props.src) {
+        const src = comp.props.src
+        // 检查是否是本地图片路径（相对路径）
+        if (src && !src.startsWith('http') && !src.startsWith('data:')) {
+          return true
+        }
+      }
+      if (comp.children) {
+        return comp.children.some(checkComponent)
+      }
+      return false
+    }
+    return components.value.some(checkComponent)
+  })
+
+  // 获取所有使用的本地图片
+  const usedLocalImages = computed(() => {
+    const usedIds = new Set<string>()
+
+    function collectImages(comp: ComponentConfig) {
+      if (comp.type === 'image' && comp.props.src) {
+        const src = comp.props.src
+        if (src && !src.startsWith('http') && !src.startsWith('data:')) {
+          usedIds.add(src)
+        }
+      }
+      if (comp.children) {
+        comp.children.forEach(collectImages)
+      }
+    }
+    components.value.forEach(collectImages)
+
+    return localImages.value.filter(img => usedIds.has(img.id))
+  })
+
+  // 添加本地图片
+  function addLocalImage(file: File): LocalImage {
+    return new Promise((resolve) => {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        const result = e.target?.result as string
+        const image: LocalImage = {
+          id: generateId(),
+          filename: file.name,
+          data: result,
+          mimeType: file.type,
+        }
+        localImages.value.push(image)
+        resolve(image)
+      }
+      reader.readAsDataURL(file)
+    }) as Promise<LocalImage>
+  }
+
+  // 根据ID获取本地图片
+  function getLocalImage(id: string): LocalImage | undefined {
+    return localImages.value.find(img => img.id === id)
+  }
+
+  // 移除未使用的本地图片
+  function removeUnusedImages() {
+    const usedIds = new Set<string>()
+
+    function collectUsedIds(comp: ComponentConfig) {
+      if (comp.type === 'image' && comp.props.src) {
+        const src = comp.props.src
+        if (src && !src.startsWith('http') && !src.startsWith('data:')) {
+          usedIds.add(src)
+        }
+      }
+      if (comp.children) {
+        comp.children.forEach(collectUsedIds)
+      }
+    }
+    components.value.forEach(collectUsedIds)
+
+    localImages.value = localImages.value.filter(img => usedIds.has(img.id))
+  }
+
   return {
     // 状态
     components,
     selectedId,
     isPreview,
     isDragging,
-    
+    localImages,
+
     // 计算属性
     definitions,
     selectedComponent,
-    
+    hasLocalImages,
+    usedLocalImages,
+
     // 方法
     getDefinition,
     addComponent,
@@ -286,5 +381,8 @@ export const useEditorStore = defineStore('editor', () => {
     duplicateComponent,
     moveUp,
     moveDown,
+    addLocalImage,
+    getLocalImage,
+    removeUnusedImages,
   }
 })
