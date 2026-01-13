@@ -50,8 +50,8 @@ export const componentDefinitions: ComponentDefinition[] = [
       htmlType: 'button',
     },
     defaultStyles: {
-      width: 100,
-      height: 40,
+      width: "100",
+      height: "40",
       backgroundColor: '#1890ff',
       color: '#ffffff',
       fontSize: 14,
@@ -112,8 +112,8 @@ export const componentDefinitions: ComponentDefinition[] = [
       placeholder: '请输入内容',
     },
     defaultStyles: {
-      width: 200,
-      height: 40,
+      width: "200",
+      height: "40",
       fontSize: 14,
       color: '#333333',
       borderWidth: 1,
@@ -160,7 +160,7 @@ export const componentDefinitions: ComponentDefinition[] = [
       rows: 4,
     },
     defaultStyles: {
-      width: 300,
+      width: "300",
       fontSize: 14,
       color: '#333333',
       borderWidth: 1,
@@ -212,12 +212,12 @@ export const componentDefinitions: ComponentDefinition[] = [
     icon: 'Image',
     category: 'basic',
     defaultProps: {
-      src: 'https://via.placeholder.com/300x200',
+      src: 'https://picsum.photos/300/200',
       alt: '图片',
     },
     defaultStyles: {
-      width: 300,
-      height: 200,
+      width: "300",
+      height: "200",
       borderRadius: 4,
       marginTop: 8,
       marginBottom: 8,
@@ -225,7 +225,7 @@ export const componentDefinitions: ComponentDefinition[] = [
       marginRight: 8,
     },
     propSchema: [
-      { name: 'src', label: '图片地址', type: 'text', default: 'https://via.placeholder.com/300x200' },
+      { name: 'src', label: '图片地址', type: 'text', default: 'https://picsum.photos/300/200' },
       { name: 'alt', label: '替代文本', type: 'text', default: '图片' },
     ],
     styleSchema: [
@@ -291,11 +291,12 @@ export const componentDefinitions: ComponentDefinition[] = [
     defaultProps: {},
     defaultStyles: {
       width: '100%',
-      height: 1,
+      height: "1",
       backgroundColor: '#e8e8e8',
       marginTop: 16,
       marginBottom: 16,
     },
+    propSchema: [],
     styleSchema: [
       { name: 'height', label: '高度', category: 'size', type: 'number', unit: 'px', min: 1 },
       { name: 'backgroundColor', label: '颜色', category: 'background', type: 'color' },
@@ -313,7 +314,7 @@ export const componentDefinitions: ComponentDefinition[] = [
     defaultProps: {},
     defaultStyles: {
       width: '100%',
-      minHeight: 100,
+      minHeight: "100",
       backgroundColor: '#ffffff',
       borderWidth: 0,
       borderColor: '#d9d9d9',

@@ -45,9 +45,24 @@ function getProcessedHtml(canvas: HTMLElement): string {
 }
 
 async function handleExport() {
+  // 先切换到预览模式再导出，以去除选中状态的 outline
+  const wasInPreview = isPreview.value
+  if (!wasInPreview) {
+    isPreview.value = true
+    editorStore.togglePreview()
+  }
+
+  // 等待 DOM 更新
+  await new Promise(resolve => setTimeout(resolve, 100))
+
   const canvas = document.querySelector('.bg-white.rounded-lg.shadow-sm') as HTMLElement
   if (!canvas) {
     alert('没有可导出的内容')
+    // 恢复原来的预览状态
+    if (!wasInPreview) {
+      isPreview.value = false
+      editorStore.togglePreview()
+    }
     return
   }
 
@@ -82,6 +97,13 @@ async function handleExport() {
     // 导出为单个 HTML 文件
     exportAsSingleFile(html)
   }
+
+  // 恢复原来的预览状态
+  if (!wasInPreview) {
+    await new Promise(resolve => setTimeout(resolve, 100))
+    isPreview.value = false
+    editorStore.togglePreview()
+  }
 }
 
 // 导出为单个 HTML 文件
@@ -115,11 +137,7 @@ async function exportAsFolder(html: string) {
     files[`image/${image.filename}`] = new Blob([bytes], { type: mimeType })
   }
 
-  // 创建 ZIP 文件（使用原生 JSZip 或类似方式）
-  // 由于没有安装 JSZip，我们使用简单的下载方式
-  // 对于单个 HTML 文件直接下载，对于带图片的情况提示用户
-
-  // 使用简单的 ZIP 实现
+  // 使用原生方式创建 ZIP 文件
   const zipBlob = await createZip(files)
   const url = URL.createObjectURL(zipBlob)
   const a = document.createElement('a')

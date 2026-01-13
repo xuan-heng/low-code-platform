@@ -105,6 +105,7 @@ export interface StyleSchema {
   options?: { label: string; value: string }[]
   min?: number
   max?: number
+  default?: string | number
 }
 
 // 拖拽数据
