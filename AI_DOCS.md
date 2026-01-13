@@ -4,7 +4,7 @@
 
 ## 项目概览
 
-**WeavePage** - 一个低代码拖拽式页面构建平台，采用前后端分离架构。
+**WeavePage** - 一个拖拽式页面构建平台，采用前后端分离架构。
 
 - 前端：Vue 3 + TypeScript + TailwindCSS（端口 5173）
 - 后端：Express + TypeScript + SQLite（端口 3001）
