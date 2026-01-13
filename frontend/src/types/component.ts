@@ -32,12 +32,12 @@ export interface ComponentStyles {
   gap?: number
   
   // 尺寸
-  width?: string
-  height?: string
-  minWidth?: string
-  minHeight?: string
-  maxWidth?: string
-  maxHeight?: string
+  width?: string | number
+  height?: string | number
+  minWidth?: string | number
+  minHeight?: string | number
+  maxWidth?: string | number
+  maxHeight?: string | number
   
   // 边距
   marginTop?: number

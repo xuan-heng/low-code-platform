@@ -127,9 +127,16 @@ function getComponentAttrs(): Record<string, any> {
       attrs.src = resolveImageSrc(p.src)
       attrs.alt = p.alt || ''
       break
-    case 'link':
-      attrs.href = p.href || '#'
-      attrs.target = p.target || '_self'
+    case 'button':
+      if (p.onClick && props.isPreview) {
+        attrs.onClick = (e: MouseEvent) => {
+          try {
+            new Function('event', p.onClick)(e)
+          } catch (err) {
+            console.error('Button click error:', err)
+          }
+        }
+      }
       break
   }
 

@@ -48,10 +48,11 @@ export const componentDefinitions: ComponentDefinition[] = [
     defaultProps: {
       text: '按钮',
       htmlType: 'button',
+      onClick: '',
     },
     defaultStyles: {
-      width: "100",
-      height: "40",
+      width: 100,
+      height: 40,
       backgroundColor: '#1890ff',
       color: '#ffffff',
       fontSize: 14,
@@ -73,6 +74,7 @@ export const componentDefinitions: ComponentDefinition[] = [
         { label: '提交', value: 'submit' },
         { label: '重置', value: 'reset' },
       ]},
+      { name: 'onClick', label: '点击事件 (JS)', type: 'textarea', default: '', placeholder: '例: alert("Hello!")' },
     ],
     styleSchema: [
       { name: 'width', label: '宽度', category: 'size', type: 'number', unit: 'px', min: 0 },
@@ -112,8 +114,8 @@ export const componentDefinitions: ComponentDefinition[] = [
       placeholder: '请输入内容',
     },
     defaultStyles: {
-      width: "200",
-      height: "40",
+      width: 200,
+      height: 40,
       fontSize: 14,
       color: '#333333',
       borderWidth: 1,
@@ -160,7 +162,7 @@ export const componentDefinitions: ComponentDefinition[] = [
       rows: 4,
     },
     defaultStyles: {
-      width: "300",
+      width: 300,
       fontSize: 14,
       color: '#333333',
       borderWidth: 1,
@@ -216,8 +218,8 @@ export const componentDefinitions: ComponentDefinition[] = [
       alt: '图片',
     },
     defaultStyles: {
-      width: "300",
-      height: "200",
+      width: 300,
+      height: 200,
       borderRadius: 4,
       marginTop: 8,
       marginBottom: 8,
@@ -291,7 +293,7 @@ export const componentDefinitions: ComponentDefinition[] = [
     defaultProps: {},
     defaultStyles: {
       width: '100%',
-      height: "1",
+      height: 1,
       backgroundColor: '#e8e8e8',
       marginTop: 16,
       marginBottom: 16,
@@ -314,7 +316,7 @@ export const componentDefinitions: ComponentDefinition[] = [
     defaultProps: {},
     defaultStyles: {
       width: '100%',
-      minHeight: "100",
+      minHeight: 100,
       backgroundColor: '#ffffff',
       borderWidth: 0,
       borderColor: '#d9d9d9',
