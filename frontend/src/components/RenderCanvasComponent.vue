@@ -30,6 +30,9 @@ const isContainerType = computed(() => {
   return ['container', 'row', 'card'].includes(props.component.type)
 })
 
+// 直接使用组件 id 作为 class，保证唯一性
+const componentClass = computed(() => props.component.id)
+
 // 获取组件标签
 function getComponentTag(type: string): string {
   const tags: Record<string, string> = {
@@ -108,12 +111,11 @@ function getComponentStyle(): Record<string, string> {
   return style
 }
 
-// 获取组件属性
+  // 获取组件属性
 function getComponentAttrs(): Record<string, any> {
   const p = props.component.props
   const s = props.component.styles
   const attrs: Record<string, any> = {}
-
   switch (props.component.type) {
     case 'input':
       attrs.type = 'text'
@@ -229,7 +231,7 @@ function handleDrop(e: DragEvent) {
       :is="getComponentTag(component.type)"
       :style="getComponentStyle()"
       v-bind="getComponentAttrs()"
-      :class="containerClasses"
+      :class="[componentClass, containerClasses]"
       @click="handleClick"
       @dragover="handleDragOver"
       @drop="handleDrop"
