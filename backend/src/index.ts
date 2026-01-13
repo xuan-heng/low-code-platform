@@ -1,6 +1,6 @@
 /**
- * Low Code Platform Backend
- * 
+ * WeavePage Backend
+ *
  * 功能：
  * - REST API 服务，提供项目(projects)和模板(templates)的 CRUD 操作
  * - 数据存储：SQLite 数据库 (data/projects.db)

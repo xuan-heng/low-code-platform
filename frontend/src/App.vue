@@ -269,7 +269,7 @@ async function crc32(data: Uint8Array): Promise<number> {
     <!-- 顶部导航栏 -->
     <header class="h-14 bg-white border-b border-gray-200 flex items-center px-4 justify-between flex-shrink-0">
       <div class="flex items-center gap-4">
-        <h1 class="text-lg font-semibold text-gray-800">Low Code Platform</h1>
+        <h1 class="text-lg font-semibold text-gray-800">WeavePage</h1>
       </div>
       
       <div class="flex items-center gap-2">
